@@ -17,7 +17,7 @@ namespace Ryder.Domain.Context
         public DbSet<Card> Cards { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<MessageThread> MessageThreads { get; set; }
-        public DbSet<MessageThreadParticipant> MessageThreadParticipants { get; set; }
+        //public DbSet<MessageThreadParticipant> MessageThreadParticipants { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Rider> Riders { get; set; }
@@ -74,8 +74,8 @@ namespace Ryder.Domain.Context
             modelBuilder.Entity<Card>().HasIndex(x => x.AppUserId);
             modelBuilder.Entity<Message>().HasIndex(x => x.MessageThreadId);
             modelBuilder.Entity<Message>().HasIndex(x => x.SenderId);
-            modelBuilder.Entity<MessageThread>().HasIndex(x => x.PinnedMessageId);
-            modelBuilder.Entity<MessageThread>().HasIndex(x => x.LastMessageId);
+            //modelBuilder.Entity<MessageThread>().HasIndex(x => x.PinnedMessageId);
+            //modelBuilder.Entity<MessageThread>().HasIndex(x => x.LastMessageId);
             modelBuilder.Entity<MessageThreadParticipant>().HasOne(x => x.MessageThread);
             modelBuilder.Entity<MessageThreadParticipant>().HasIndex(x => x.AppUserId);
             modelBuilder.Entity<Order>().HasOne(x => x.PickUpLocation);

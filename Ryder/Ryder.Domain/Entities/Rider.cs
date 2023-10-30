@@ -10,5 +10,6 @@ namespace Ryder.Domain.Entities
         public string BikeDocument { get; set; }
         public RiderAvailabilityStatus AvailabilityStatus { get; set; }
         public Guid AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
     }
 }

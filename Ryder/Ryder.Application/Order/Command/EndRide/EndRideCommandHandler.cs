@@ -16,9 +16,9 @@ namespace Ryder.Application.Order.Command.EndRide
     {
         private readonly ApplicationContext _context;
         private readonly ILogger<EndRideCommandHandler> _logger; // Inject the logger.
-        private readonly NotificationHub _notificationHub;
+        private readonly INotificationHub _notificationHub;
 
-		public EndRideCommandHandler(ApplicationContext context, ILogger<EndRideCommandHandler> logger, NotificationHub notificationHub)
+		public EndRideCommandHandler(ApplicationContext context, ILogger<EndRideCommandHandler> logger, INotificationHub notificationHub)
 		{
 			_context = context;
 			_logger = logger;

@@ -19,7 +19,8 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IDocumentUploadService, DocumentUploadService>();
-builder.Services.AddTransient<NotificationHub>();
+//builder.Services.AddTransient<NotificationHub>();
+builder.Services.AddTransient<INotificationHub, NotificationHub>();
 builder.Services.AddSignalR();
 
 // Add services to the container.

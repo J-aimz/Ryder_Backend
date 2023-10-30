@@ -1,5 +1,6 @@
 ﻿using Ryder.Domain.Common;
 using Ryder.Domain.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ryder.Domain.Entities
 {
@@ -20,7 +21,5 @@ namespace Ryder.Domain.Entities
         public string? Email { get; set; }
         public string? Name { get; set; }
         public RiderOrderStatus RiderOrderStatus { get; set; }
-
-
     }
 }

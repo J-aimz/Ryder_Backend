@@ -70,7 +70,8 @@ namespace Ryder.Infrastructure.Seed
                         PostCode = "+234",
                         Longitude = "3",
                         Latitude = "4",
-                        Country = "Nigeria"
+                        Country = "Nigeria",
+                        AddressDescription = "magodo lagos"
                     },
                     TwoFactorEnabled = false,
                     LockoutEnd = null,

@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Messages\Query\" />
     <Folder Include="User\Command\" />
   </ItemGroup>
 
