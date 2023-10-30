@@ -15,6 +15,12 @@ namespace Ryder.Application.Common.Hubs.Messaging
 
         }
 
+        public async Task UpdateMessage(string receiversID, string message)
+        {
+
+        }
+
+
 
 
     }

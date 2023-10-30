@@ -68,16 +68,17 @@ namespace Ryder.Application.Messages.Command.SendMessage
                 {
                     await _messengerHub.SendMessage(_currentUserService.UserId.Equals(messageThread.MessageThreadParticipants.AppUserId) ? messageThread.MessageThreadParticipants.RiderId.ToString() : messageThread.MessageThreadParticipants.AppUserId.ToString(), request.Body);
 
+                    _logger.LogInformation("Meassge post Successfull");
                     return Result.Success("Success");
                 }
 
                 return Result.Fail("Failed");
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                _logger.LogError($"failed to access db when posting msg by user:{_currentUserService.UserId} with email:{_currentUserService.UserEmail}, trace: {ex.StackTrace}");
+                return Result.Fail("Oops Something Went Wrong");
             }
 
 

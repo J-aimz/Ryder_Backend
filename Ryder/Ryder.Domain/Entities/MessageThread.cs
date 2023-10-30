@@ -11,6 +11,7 @@ namespace Ryder.Domain.Entities
         public bool MessageIsRead { get; set; } = false;
         public int NumberOfUnreadMessages { get; set; }
         public MessageThreadParticipant MessageThreadParticipants { get; set; }
+        public Message Messages { get; set; }
         //public Guid LastMessageId { get; set; }
         //public Guid PinnedMessageId { get; set; }
     }

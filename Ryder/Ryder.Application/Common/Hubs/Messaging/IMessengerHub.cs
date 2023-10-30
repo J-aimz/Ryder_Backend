@@ -8,6 +8,7 @@ namespace Ryder.Application.Common.Hubs.Messaging
 {
     public interface IMessengerHub
     {
-        Task SendMessage(string receverId, string messageBody);
+        Task SendMessage(string receiverId, string messageBody);
+        Task UpdateMessage(string receiversID, string message);
     }
 }

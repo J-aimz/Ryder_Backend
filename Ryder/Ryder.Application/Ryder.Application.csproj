@@ -26,7 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Messages\Query\" />
+    <Folder Include="Messages\Query\GetTheadMessages\" />
     <Folder Include="User\Command\" />
   </ItemGroup>
 

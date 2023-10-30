@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace Ryder.Application.Messages.Command.SendMessage
 {
-    internal class MessageDto
+    public class MessageDto
     {
+        public string OderId { get; set; }
+        //public string SenderId { get; set; } 
+        //public string ReceiverId { get; set; }
+        public string Body { get; set; }
     }
 }
