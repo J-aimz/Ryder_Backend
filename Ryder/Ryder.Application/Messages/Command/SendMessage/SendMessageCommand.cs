@@ -18,12 +18,12 @@ namespace Ryder.Application.Messages.Command.SendMessage
         //public string ReceiverId { get; set; }
         public string Body { get; set; }
 
-        public SendMessageCommand(string oderId, string senderId, string receiverId, string body)
+        public SendMessageCommand(MessageDto messageDto)
         {
-            OderId = oderId;
+            OderId = messageDto.OderId;
             //SenderId= senderId;
             //ReceiverId= receiverId;
-            Body = body;
+            Body = messageDto.Body;
         }
     }
 

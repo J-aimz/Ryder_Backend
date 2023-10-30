@@ -40,9 +40,11 @@ namespace Ryder.Application.Messages.Command.UpdateMessage
         {
             try
             {
-                var messageThread = await _dbContext.MessageThreads
-                    .Include(x => x.Messages.Id.Equals(request.MessageId))
-                    .FirstOrDefaultAsync(x => x.OrderId.Equals(request.OrderId));
+                //var messageThread = await _dbContext.MessageThreads
+                //    .Include(x => x.Messages.Id.Equals(request.MessageId))
+                //    .FirstOrDefaultAsync(x => x.OrderId.Equals(request.OrderId));
+                var messageThread = await _dbContext.Messages
+                    .FirstOrDefaultAsync(x => x.Id.Equals(request.MessageId));
                     
 
                 if (messageThread == null)
@@ -51,10 +53,12 @@ namespace Ryder.Application.Messages.Command.UpdateMessage
                     return Result.Fail("Message Thread Not Found");
                 }
 
-                messageThread.Messages.Emojie = request.Emojie;
-                messageThread.Messages.UpdatedAt = DateTime.UtcNow;
+                //messageThread.Messages.Emojie = request.Emojie;
+                //messageThread.Messages.UpdatedAt = DateTime.UtcNow;
+                messageThread.Emojie = request.Emojie;
+                messageThread.UpdatedAt = DateTime.UtcNow;
 
-                var result = _dbContext.MessageThreads.Update(messageThread);
+                var result = _dbContext.Messages.Update(messageThread);
 
                 int savedChanges = await _dbContext.SaveChangesAsync();
 
@@ -65,15 +69,10 @@ namespace Ryder.Application.Messages.Command.UpdateMessage
                 }
 
                 //send notification
-                await _messengerHub.UpdateMessage(messageThread.Messages.ReceiverId, request.Emojie);
+                await _messengerHub.UpdateMessage(messageThread.ReceiverId, request.Emojie);
 
                 _logger.LogInformation("Saved Message Update Successfully");
                 return Result.Success("Update Successful");
-
-
-
-                
-
             }
             catch (Exception)
             {

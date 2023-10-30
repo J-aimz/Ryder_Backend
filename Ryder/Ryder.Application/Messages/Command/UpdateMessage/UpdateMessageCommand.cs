@@ -15,12 +15,13 @@ namespace Ryder.Application.Messages.Command.UpdateMessage
         public string MessageId { get; set; }
         public string Emojie { get; set; }
 
-        public UpdateMessageCommand(string orderId, string emojie)
+        public UpdateMessageCommand(EmojieDto emojieDto)
         {
-            OrderId = orderId;
-            Emojie = emojie;    
+            OrderId = emojieDto.OrderId;
+            Emojie = emojieDto.Emojie; 
+            MessageId = emojieDto.MessageId;    
         }
-    }
+    } 
 
     public class UpdateMessageCommandValidator : AbstractValidator<UpdateMessageCommand>
     {

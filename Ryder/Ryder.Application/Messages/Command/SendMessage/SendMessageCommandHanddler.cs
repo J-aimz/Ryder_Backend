@@ -39,10 +39,9 @@ namespace Ryder.Application.Messages.Command.SendMessage
             try
             {
                 var messageThread = await _dbContext.MessageThreads
-                    .Include(x => x.Orders)
-                    .Include(x => x.MessageThreadParticipants)
                     .Where(x => x.Orders.Id.Equals(request.OderId))
-                    .FirstOrDefaultAsync(x => x.OrderId.Equals(request.OderId));
+                    .Include(x => x.MessageThreadParticipants)
+                    .FirstOrDefaultAsync();
                     
 
                 if (messageThread == null)
@@ -51,7 +50,7 @@ namespace Ryder.Application.Messages.Command.SendMessage
                     return Result.Fail("Opps Something Went Wrong");
                 }
 
-                Message message = new()
+                Message message = new Message()
                 {
                     MessageThreadId = messageThread.Id,
                     Body = request.Body,
