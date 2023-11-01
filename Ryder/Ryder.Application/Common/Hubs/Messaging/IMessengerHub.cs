@@ -10,5 +10,6 @@ namespace Ryder.Application.Common.Hubs.Messaging
     {
         Task SendMessage(string receiverId, string messageBody);
         Task UpdateMessage(string receiversID, string message);
+        Task SendPaymentToCustomer(string receiversID, string message);
     }
 }

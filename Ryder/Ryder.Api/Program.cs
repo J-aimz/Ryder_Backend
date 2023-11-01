@@ -70,6 +70,7 @@ app.UseAuthorization();
 
 //app.ConfigureSignalR();
 app.MapHub<NotificationHub>("/notificationsHub");
+app.MapHub<MessengerHub>("/messenger");
 // Configure the HTTP request pipeline.
 
 app.UseSwagger();

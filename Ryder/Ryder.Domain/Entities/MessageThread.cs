@@ -9,8 +9,10 @@ namespace Ryder.Domain.Entities
         public string OrderId { get; set; }
         public Order Orders { get; set; }
         public bool MessageIsRead { get; set; } = false;
-        public int NumberOfUnreadMessages { get; set; }
+        public int NumberOfUnreadMessages { get; set; } = 0;
         public MessageThreadParticipant MessageThreadParticipants { get; set; }
+        [ForeignKey("MessageThreadParticipants")]
+        public Guid? MessageThreadParticipantsId { get; set; } 
         public Message Messages { get; set; }
     }
 }

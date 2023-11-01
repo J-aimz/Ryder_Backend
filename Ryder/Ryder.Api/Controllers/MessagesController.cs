@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Ryder.Application.Messages.Command.SendMessage;
+using Ryder.Application.Messages.Command.UpdateMessage;
 using Ryder.Application.Messages.Query.GetTheadMessages;
 
 namespace Ryder.Api.Controllers
@@ -31,9 +32,10 @@ namespace Ryder.Api.Controllers
         }
 
         [HttpPatch("SendEmoji")]
-        public async Task<IActionResult> SendEmojieAsync([FromBody] string orderId, [FromBody]string emojie )
+        public async Task<IActionResult> SendEmojieAsync([FromBody] EmojieDto emojieDto )
         {
-
+            _logger.LogInformation($"Sending emojie orderId: {emojieDto.OrderId}, emojie: {emojieDto.Emojie}");
+            return await Initiate(() => Mediator.Send(new UpdateMessageCommand(emojieDto)));
         }
     }
 }

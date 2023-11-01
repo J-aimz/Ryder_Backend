@@ -5,7 +5,8 @@ using Ryder.Domain.Entities;
 using Ryder.Domain.Enums;
 using AspNetCoreHero.Results;
 using Ryder.Domain.Context;
-using Microsoft.Extensions.Logging; 
+using Microsoft.Extensions.Logging;
+using Microsoft.EntityFrameworkCore;
 
 namespace Ryder.Application.Order.Command.AcceptOrder;
 
@@ -67,7 +68,16 @@ public class AcceptOrderCommandHandler : IRequestHandler<AcceptOrderCommand, IRe
 
 		_context.RequestStatuses.Add(newRiderOrderStatus);
 
-		await _context.SaveChangesAsync();
+		//Add rider to message thread
+		var messageThread = await _context.MessageThreads
+			.FirstOrDefaultAsync(x => x.OrderId.Equals(request.OrderId));
+
+		messageThread.MessageThreadParticipants.RiderId = newRiderOrderStatus.RiderId;
+
+		 _context.MessageThreads.Update(messageThread);
+			
+
+		var res = await _context.SaveChangesAsync();
 
 		
 		_logger.LogInformation($"Order with ID {request.OrderId} accepted.");

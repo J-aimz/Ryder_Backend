@@ -83,12 +83,34 @@ namespace Ryder.Application.Order.Command.PlaceOrder
                     Name = currentUser.FirstName +" "+ currentUser.LastName
                 };
 
-
+                //send notification to riders
                 Task.Run( () => RunNotification(_cancellationTokenSource.Token));
 
 
 
                 await _context.Orders.AddAsync(order, cancellationToken);
+
+                //Add customer to message thread
+                MessageThread messageThread = new MessageThread
+                {
+                    Id = Guid.NewGuid(),
+                    OrderId = order.Id.ToString()
+                };
+
+                MessageThreadParticipant participant = new MessageThreadParticipant
+                {
+                    Id = Guid.NewGuid(),
+                    MessageThreadId = messageThread.Id,
+                    AppUserId = order.Id
+                };
+
+
+                //Add user to Message thread
+                await _context.MessageThreads.AddAsync(messageThread);
+                await _context.MessageThreadParticipants.AddAsync(participant);  
+
+
+
                 await _context.SaveChangesAsync(cancellationToken);
 
                 return Result<Guid>.Success(order.Id, "Order placed successfully");
@@ -122,7 +144,7 @@ namespace Ryder.Application.Order.Command.PlaceOrder
                         verify = false;
                         await _notificationHub.NotifyRidersOfIncomingRequest(getAllAvailableRiders);
                         
-                    }else if(attempts == 10 && getAllAvailableRiders.Count !> 0)
+                    }else if(attempts == 10 && !(getAllAvailableRiders.Count > 0))
                     {
                         await _notificationHub.NotifyUserNoRiderWasFound(_currentUser.UserEmail);
                     }
