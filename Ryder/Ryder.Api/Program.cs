@@ -3,6 +3,7 @@ using NLog.Extensions.Logging;
 using Ryder.Api.Configurations;
 using Ryder.Application;
 using Ryder.Application.Common.Hubs;
+using Ryder.Application.Common.Hubs.Messaging;
 using Ryder.Infrastructure;
 using Ryder.Infrastructure.Implementation;
 using Ryder.Infrastructure.Interface;
@@ -19,7 +20,8 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IDocumentUploadService, DocumentUploadService>();
-builder.Services.AddTransient<NotificationHub>();
+builder.Services.AddTransient<INotificationHub, NotificationHub>();
+builder.Services.AddTransient<IMessengerHub, MessengerHub>();
 builder.Services.AddSignalR();
 
 // Add services to the container.

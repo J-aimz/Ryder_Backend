@@ -12,6 +12,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
+using Org.BouncyCastle.Math.EC.Rfc7748;
+using System.Reflection.Metadata.Ecma335;
+using Ryder.Infrastructure.Interface;
 
 namespace Ryder.Application.Order.Command.PlaceOrder
 {
@@ -19,18 +22,22 @@ namespace Ryder.Application.Order.Command.PlaceOrder
     {
         private readonly ApplicationContext _context;
         private readonly UserManager<AppUser> _userManager;
-        private readonly IHubContext<NotificationHub> _notificationHub;
+        private readonly INotificationHub _notificationHub;
+        private readonly ICurrentUserService _currentUser;
+        private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
         public PlaceOrderCommandHandler(ApplicationContext context, UserManager<AppUser> userManager,
-            IHubContext<NotificationHub> notificationHub)
+            INotificationHub notificationHub, ICurrentUserService currentUserService)
         {
             _context = context;
             _userManager = userManager;
             _notificationHub = notificationHub;
+            _currentUser = currentUserService;
         }
 
         public async Task<IResult<Guid>> Handle(PlaceOrderCommand request, CancellationToken cancellationToken)
         {
+            
             try
             {
                 var currentUser = await _userManager.FindByIdAsync(request.AppUserId.ToString());
@@ -77,17 +84,9 @@ namespace Ryder.Application.Order.Command.PlaceOrder
                 };
 
 
-                List<string> getAllAvailableRiders = await _context.Riders
-                    .Where(row => row.AvailabilityStatus == RiderAvailabilityStatus.Available)
-                    .Select(rider => rider.Id.ToString()).ToListAsync();
+                Task.Run( () => RunNotification(_cancellationTokenSource.Token));
 
-                if (!getAllAvailableRiders.Any())
-                {
-                    return Result<Guid>.Fail("No available rider to fufil your order!");
-                }
 
-                await _notificationHub.Clients.All.SendAsync("IncomingRequest", getAllAvailableRiders,
-                    "You have an incoming request.", cancellationToken: cancellationToken);
 
                 await _context.Orders.AddAsync(order, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
@@ -99,5 +98,52 @@ namespace Ryder.Application.Order.Command.PlaceOrder
                 return Result<Guid>.Fail("Order not placed");
             }
         }
+
+
+        public async Task RunNotification(CancellationToken cancellationToken)
+        {
+            List<string> getAllAvailableRiders = new();
+
+            bool verify = true;
+            int attempts = 0;
+            int maxAttempts = 10;
+
+            do
+            {
+                try
+                {
+                    getAllAvailableRiders = await _context.Riders
+                        .Where(x => x.AvailabilityStatus == RiderAvailabilityStatus.Available)
+                        .Include(x => x.AppUser)
+                        .Select(x => x.AppUser.UserName.ToString()).ToListAsync(cancellationToken);
+                    
+                    if (getAllAvailableRiders.Count > 0)
+                    {
+                        verify = false;
+                        await _notificationHub.NotifyRidersOfIncomingRequest(getAllAvailableRiders);
+                        
+                    }else if(attempts == 10 && getAllAvailableRiders.Count !> 0)
+                    {
+                        await _notificationHub.NotifyUserNoRiderWasFound(_currentUser.UserEmail);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    await _notificationHub.NotifyUserNoRiderWasFound(_currentUser.UserEmail);
+                }
+
+                attempts++;
+
+                if (verify && attempts <= maxAttempts)
+                    await Task.Delay(TimeSpan.FromMinutes(1), cancellationToken);
+
+
+            } while (verify && attempts <= maxAttempts && !cancellationToken.IsCancellationRequested);
+
+            return;
+
+        }
+
     }
 }

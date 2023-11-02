@@ -12,8 +12,8 @@ using Ryder.Domain.Context;
 namespace Ryder.Domain.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230921124215_V4")]
-    partial class V4
+    [Migration("20231029195937_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -161,12 +161,14 @@ namespace Ryder.Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("City")
+                    b.Property<string>("AddressDescription")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<string>("City")
+                        .HasColumnType("text");
+
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("CreatedAt")
@@ -176,19 +178,15 @@ namespace Ryder.Domain.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("Latitude")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Longitude")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PostCode")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("State")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -208,7 +206,7 @@ namespace Ryder.Domain.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
 
-                    b.Property<Guid>("AddressId")
+                    b.Property<Guid?>("AddressId")
                         .HasColumnType("uuid");
 
                     b.Property<string>("ConcurrencyStamp")
@@ -244,13 +242,6 @@ namespace Ryder.Domain.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
-                    b.Property<string>("Otp")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<DateTime>("OtpExpiration")
-                        .HasColumnType("timestamp without time zone");
-
                     b.Property<string>("PasswordHash")
                         .HasColumnType("text");
 
@@ -261,11 +252,9 @@ namespace Ryder.Domain.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("ProfilePictureUrl")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("RefreshToken")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTime>("RefreshTokenExpiryTime")
@@ -388,12 +377,12 @@ namespace Ryder.Domain.Migrations
                     b.Property<Guid>("LastMessageId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("PinnedMessageId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Subject")
+                    b.Property<string>("OrderId")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<Guid>("PinnedMessageId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp without time zone");
@@ -428,7 +417,7 @@ namespace Ryder.Domain.Migrations
                     b.Property<bool>("IsPinned")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime>("LastReadTime")
+                    b.Property<DateTime?>("LastReadTime")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<Guid>("MessageThreadId")
@@ -458,17 +447,30 @@ namespace Ryder.Domain.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<Guid>("AppUserId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<Guid>("DropOffLocationId")
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Email")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("timestamp without time zone");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("text");
+
+                    b.Property<string>("PackageDescription")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<Guid>("PickUpLocationId")
                         .HasColumnType("uuid");
@@ -483,6 +485,9 @@ namespace Ryder.Domain.Migrations
 
                     b.Property<Guid>("RiderId")
                         .HasColumnType("uuid");
+
+                    b.Property<int>("RiderOrderStatus")
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("timestamp without time zone");
@@ -540,6 +545,39 @@ namespace Ryder.Domain.Migrations
                     b.HasIndex("OrderId");
 
                     b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("Ryder.Domain.Entities.RequestStatus", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .HasColumnType("boolean");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("RiderId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("RiderOrderStatus")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrderId");
+
+                    b.HasIndex("RiderId");
+
+                    b.ToTable("RequestStatuses");
                 });
 
             modelBuilder.Entity("Ryder.Domain.Entities.Rider", b =>
@@ -637,9 +675,7 @@ namespace Ryder.Domain.Migrations
                 {
                     b.HasOne("Ryder.Domain.Entities.Address", "Address")
                         .WithMany()
-                        .HasForeignKey("AddressId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("AddressId");
 
                     b.Navigation("Address");
                 });
@@ -672,6 +708,17 @@ namespace Ryder.Domain.Migrations
                     b.Navigation("DropOffLocation");
 
                     b.Navigation("PickUpLocation");
+                });
+
+            modelBuilder.Entity("Ryder.Domain.Entities.Rider", b =>
+                {
+                    b.HasOne("Ryder.Domain.Entities.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
                 });
 #pragma warning restore 612, 618
         }

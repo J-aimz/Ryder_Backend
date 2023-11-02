@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace Ryder.Application.Common.Hubs
 {
-    public class NotificationHub : Hub
+    public class NotificationHub : Hub, INotificationHub
     {
         public async Task NotifyRidersOfIncomingRequest(List<string> riderId)
         {
-            await Clients.All.SendAsync("IncomingRequest", riderId, "You have an incoming request.");
+            await Clients.Clients(riderId).SendAsync("IncomingRequest", "You have an incoming request.");
         }
 
 
@@ -20,6 +20,11 @@ namespace Ryder.Application.Common.Hubs
         public async Task NotifyUserAndRiderOfOrderCompleted(string userId, string riderId)
         {
             await Clients.Users(userId, riderId).SendAsync("OrderCompleted", "order has been completed.");
+        }
+
+        public async Task NotifyUserNoRiderWasFound(string userId)
+        {
+            await Clients.User(userId).SendAsync("noRiderFound", "Please Try again later no rider was found");
         }
     }
 }

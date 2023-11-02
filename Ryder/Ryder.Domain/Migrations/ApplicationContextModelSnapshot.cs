@@ -338,10 +338,16 @@ namespace Ryder.Domain.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
+                    b.Property<string>("Emojie")
+                        .HasColumnType("text");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
                     b.Property<Guid>("MessageThreadId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("Receiver")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("SenderId")
@@ -371,13 +377,13 @@ namespace Ryder.Domain.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<Guid>("LastMessageId")
-                        .HasColumnType("uuid");
+                    b.Property<bool>("MessageIsRead")
+                        .HasColumnType("boolean");
 
-                    b.Property<Guid>("PinnedMessageId")
-                        .HasColumnType("uuid");
+                    b.Property<int>("NumberOfUnreadMessages")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("Subject")
+                    b.Property<string>("OrderId")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -385,10 +391,6 @@ namespace Ryder.Domain.Migrations
                         .HasColumnType("timestamp without time zone");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("LastMessageId");
-
-                    b.HasIndex("PinnedMessageId");
 
                     b.ToTable("MessageThreads");
                 });
@@ -405,23 +407,14 @@ namespace Ryder.Domain.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp without time zone");
 
-                    b.Property<bool>("IsArchived")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
-
-                    b.Property<bool>("IsPinned")
-                        .HasColumnType("boolean");
-
-                    b.Property<DateTime>("LastReadTime")
-                        .HasColumnType("timestamp without time zone");
 
                     b.Property<Guid>("MessageThreadId")
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("PinnedDate")
-                        .HasColumnType("timestamp without time zone");
+                    b.Property<Guid>("RiderId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("timestamp without time zone");
@@ -705,6 +698,17 @@ namespace Ryder.Domain.Migrations
                     b.Navigation("DropOffLocation");
 
                     b.Navigation("PickUpLocation");
+                });
+
+            modelBuilder.Entity("Ryder.Domain.Entities.Rider", b =>
+                {
+                    b.HasOne("Ryder.Domain.Entities.AppUser", "AppUser")
+                        .WithMany()
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
                 });
 #pragma warning restore 612, 618
         }
