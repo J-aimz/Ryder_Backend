@@ -13,6 +13,11 @@ namespace Ryder.Application.Order.Query.GetAll
         public string PickUpLocationAddressDescription { get; set; }
         public string DropOffLocationAddressDescription { get; set; }
         public string PackageDescription { get; set; }
+        public string Phone { get; set; }
+        public string DropLongitude { get; set; }
+        public string DropLatitude { get; set; }
+        public string PickLatitude { get; set; }
+        public string PickLongitude { get; set; }
         public string Email { get; set; }
         public string Name { get; set; }
         public decimal Amount { get; set; }

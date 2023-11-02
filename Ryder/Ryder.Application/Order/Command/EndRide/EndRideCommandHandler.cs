@@ -40,8 +40,6 @@ namespace Ryder.Application.Order.Command.EndRide
             }
 
 
-
-
             // Update the order details
             order.Status = OrderStatus.Delivered;
             order.EndTime = DateTime.UtcNow;
