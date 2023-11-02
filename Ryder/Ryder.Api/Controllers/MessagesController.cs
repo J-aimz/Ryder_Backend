@@ -18,7 +18,7 @@ namespace Ryder.Api.Controllers
 
 
         [HttpGet("GetMessages/{OrderId}")]   
-        public async Task<IActionResult> GetMessagesAsync([FromQuery]string OrderId)
+        public async Task<IActionResult> GetMessagesAsync(string OrderId)
         {
             _logger.LogInformation("Get Messages Invoked");
             return await Initiate(() => Mediator.Send(new GetThreadQuery(OrderId)));
