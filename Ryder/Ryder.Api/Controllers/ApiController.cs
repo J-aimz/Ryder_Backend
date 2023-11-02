@@ -12,7 +12,8 @@ using ValidationException = Ryder.Infrastructure.Common.Exceptions.ValidationExc
 
 namespace Ryder.Api.Controllers
 {
-    [Authorize(AuthenticationSchemes = "Bearer")]
+    //[Authorize(AuthenticationSchemes = "Bearer")]
+    [AllowAnonymous]
     [Route("api/v1/[Controller]")]
     [ApiController]
     public class ApiController : Controller

@@ -17,7 +17,7 @@ namespace Ryder.Domain.Context
         public DbSet<Card> Cards { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<MessageThread> MessageThreads { get; set; }
-        //public DbSet<MessageThreadParticipant> MessageThreadParticipants { get; set; }
+        public DbSet<MessageThreadParticipant> MessageThreadParticipants { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<Rider> Riders { get; set; }

@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace Ryder.Application.Messages.Command.UpdateMessage
 {
-    internal class EmojieDto
+    public class EmojieDto
     {
+        public string OrderId { get; set; }
+        public string MessageId { get; set; }
+        public string Emojie { get; set; }
     }
 }

@@ -12,16 +12,20 @@ namespace Ryder.Application.Common.Hubs.Messaging
 
         public async Task SendMessage(string receverId, string messageBody)
         {
-
+            await Clients.User(receverId).SendAsync("sendMessage", messageBody);
         }
 
         public async Task UpdateMessage(string receiversID, string message)
         {
+            await Clients.User(receiversID).SendAsync("updateMessage", message);
 
         }
 
 
-
+        public async Task SendPaymentToCustomer(string receiversID, string message)
+        {
+            await Clients.User(receiversID).SendAsync("sendUserPayementLink", message);
+        }
 
     }
 }

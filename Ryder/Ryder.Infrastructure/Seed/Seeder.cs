@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Org.BouncyCastle.Asn1.Ocsp;
 using Ryder.Domain.Context;
 using Ryder.Domain.Entities;
 using Ryder.Infrastructure.Policy;
@@ -57,7 +58,7 @@ namespace Ryder.Infrastructure.Seed
                     FirstName = "Olawale",
                     LastName = "Odeyemi",
                     UserName = "CeoCodes",
-                    Email = "olawale.odeyemi@decagon.dev",
+                    Email = "cryptmav@gmail.com",
                     PhoneNumber = "01234567890",
                     PhoneNumberConfirmed = true,
                     EmailConfirmed = true,
@@ -81,13 +82,61 @@ namespace Ryder.Infrastructure.Seed
                     RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(30),
                 };
 
+                var user1 = new AppUser
+                {
+                    Id = Guid.NewGuid(),
+                    FirstName = "James",
+                    LastName = "Elemu",
+                    UserName = "Reactgod",
+                    Email = "adesojimav@gmail.com",
+                    PhoneNumber = "01234567890",
+                    PhoneNumberConfirmed = true,
+                    EmailConfirmed = true,
+                    ProfilePictureUrl = "www.avartar.com/publicId",
+                    Address = new Address
+                    {
+                        City = "warri",
+                        State = "Delta",
+                        PostCode = "900332",
+                        Country = "Nigeria",
+                        Longitude = "0",
+                        Latitude = "1",
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow,
+                        IsDeleted = false,
+                        AddressDescription = "magodo lagos"
+                    },
+                    TwoFactorEnabled = false,
+                    LockoutEnd = null,
+                    LockoutEnabled = false,
+                    AccessFailedCount = 0,
+                    RefreshToken = refreshToken,
+                    RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(30),
+                };
+
+
+                var rider = new Rider
+                {
+                    ValidIdUrl = "mm.419.com",
+                    PassportPhoto = "fdfef.eefe.f",
+                    BikeDocument = "sdfgdwerwrewre",
+                    AvailabilityStatus = Domain.Enums.RiderAvailabilityStatus.Unavailable,
+                    AppUserId = user1.Id,
+                };
+
+
                 await userManager.CreateAsync(user, "P4ssw0rd@123");
                 await userManager.AddToRoleAsync(user, roles[1]);
+                await userManager.CreateAsync(user1, "@jamesMilna123");
+                await userManager.AddToRoleAsync(user1, roles[0]);
+                await dbContext.Riders.AddAsync(rider);
 
 
                 //Saving everything into the database
+
                 await dbContext.SaveChangesAsync();
             }
         }
+
     }
 }
